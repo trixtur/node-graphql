@@ -8,6 +8,7 @@ var express_graphql = require('express-graphql');
 const typeDefs = `
   # the schema allows the following query:
   type Query {
+    post(id: Int!): Post
     posts: [Post]
     author(id: Int!): Author
   }
@@ -23,12 +24,11 @@ const typeDefs = `
 const resolvers = {
   Query: {
     posts: () => posts,
-    author: (_, { id }) => find(authors, { id: id }),
   },
 };
 
-const {authors, authorTypeDef, authorResolvers} = require('./author');
-const {postResolvers, posts, postTypeDef} = require('./posts');
+const {authors, authorTypeDef, authorResolvers} = require('./controllers/author');
+const {postResolvers, posts, postTypeDef} = require('./controllers/posts');
 
 
 const schema = makeExecutableSchema({
