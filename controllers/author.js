@@ -4,14 +4,17 @@ const { find, filter, merge } = require('lodash');
 // Mutations for Authors
 const authorResolvers = {
     Query: {
+        authors: (_, {}) => {
+            return db.author.findAll();
+        },
         author: (_, {id}) => {
             return db.author.findById(id);
         },
     },
     Mutation: {
-        createAuthor: (_,{firstName,lastName}) => {
+        createAuthor: async (_,{firstName,lastName}) => {
             const author = {firstName,lastName};
-            return db.author.create(author);
+            return await db.author.create(author);
         },
         deleteAuthor: (_,{authorId}) => {
             let index = authors.findIndex(author => author.id === authorId);
@@ -30,6 +33,10 @@ const authorTypeDef = `
     firstName: String
     lastName: String
     posts: [Post] # the list of Posts by this author
+  }
+  extend type Query {
+    author(id: Int!): Author
+    authors: [Author]
   }
 
     # this set of mutations is for Authors:

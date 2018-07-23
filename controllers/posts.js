@@ -12,25 +12,22 @@ const postResolvers = {
         },
     },
     Mutation: {
-        createPost: (_,{title,authorId}) =>  {
-            const lastPost = posts[posts.length-1];
+        createPost: async (_,{title,authorId}) =>  {
             const post = {title,authorId,votes:0};
-            db.post.create(post).then(post => {
-                return post;
-            });
+            return await db.post.create(post);
         },
-        deletePost: (_,{postId}) => {
-            let index = db.post.findById(id);
-            posts.splice(index,1);
-            return true;
+        deletePost: async (_,{postId}) => {
+            const post = await db.post.findById(postId);
+            return post.destroy();
         },
 
-        upvotePost: (_, { postId }) => {
-            const post = db.post.findById(id);
+        upvotePost: async (_, { postId }) => {
+            const post = await db.post.findById(postId);
             if (!post) {
                 throw new Error(`Couldn't find post with id ${postId}`);
             }
             post.votes += 1;
+            post.save();
             return post;
         },
     },
@@ -44,6 +41,10 @@ const postTypeDef = `
     title: String
     author: Author
     votes: Int
+  }
+  extend type Query {
+    post(id: Int!): Post
+    posts: [Post]
   }
 
     # this set of mutations is for Posts:
@@ -66,14 +67,6 @@ const postTypeDef = `
     }
 `;
 
-/*
-const posts = [
-  { id: 1, authorId: 1, title: 'Introduction to GraphQL', votes: 2 },
-  { id: 2, authorId: 2, title: 'Welcome to Apollo', votes: 3 },
-  { id: 3, authorId: 2, title: 'Advanced GraphQL', votes: 1 },
-  { id: 4, authorId: 3, title: 'Launchpad is Cool', votes: 7 },
-];
-*/
 
 module.exports.postResolvers = postResolvers;
 module.exports.postTypeDef = postTypeDef;

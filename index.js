@@ -8,9 +8,7 @@ var express_graphql = require('express-graphql');
 const typeDefs = `
   # the schema allows the following query:
   type Query {
-    post(id: Int!): Post
-    posts: [Post]
-    author(id: Int!): Author
+        blank: Int
   }
 
   # this schema allows the following mutation:
@@ -20,20 +18,13 @@ const typeDefs = `
 `;
 
 // Provide resolver functions for your schema fields
-
-const resolvers = {
-  Query: {
-    posts: () => posts,
-  },
-};
-
-const {authors, authorTypeDef, authorResolvers} = require('./controllers/author');
-const {postResolvers, posts, postTypeDef} = require('./controllers/posts');
+const {authorTypeDef, authorResolvers} = require('./controllers/author');
+const {postResolvers, postTypeDef} = require('./controllers/posts');
 
 
 const schema = makeExecutableSchema({
   typeDefs:[typeDefs,authorTypeDef,postTypeDef],
-  resolvers:merge(resolvers,postResolvers,authorResolvers),
+  resolvers:merge(postResolvers,authorResolvers),
 });
 
 
