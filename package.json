@@ -10,5 +10,9 @@
     "graphql"
   ],
   "author": "Ben Payne",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "sequelize": "^4.38.0",
+    "yarn": "^1.7.0"
+  }
 }
