@@ -91,7 +91,10 @@ describe('GraphQL Schema Integration Tests', () => {
   });
 
   afterEach(() => {
-    // Clean up any lingering mocks
+    // Reset the module cache to ensure test isolation.
+    // This is necessary because index.js has side effects (starts Express server)
+    // which prevents proper isolation between tests. Resetting modules ensures
+    // each test gets a fresh module cache and can properly capture mock calls.
     jest.resetModules();
   });
 

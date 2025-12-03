@@ -97,6 +97,8 @@ All tests use Jest's mocking capabilities to:
 3. Mock lodash functions where needed
 4. Isolate each component for true unit testing
 
+**Note on Mock Duplication**: The database mock definition is repeated across multiple test files. While this appears to be duplication, it's intentional and follows Jest best practices. Jest's `jest.mock()` factory functions cannot reference external variables, so each test file must define its mocks inline. This ensures proper hoisting and test isolation.
+
 ### Test Organization
 - Tests are organized using `describe` blocks for logical grouping
 - Each resolver type (Query, Mutation, Type) has its own test suite
